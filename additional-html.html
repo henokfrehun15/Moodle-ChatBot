@@ -1,0 +1,1163 @@
+<style>
+  /* ==========================================================
+     CHAT BUBBLE
+     ========================================================== */
+
+  #mchat-bubble {
+    position: fixed !important;
+    bottom: 80px !important;
+    right: 24px !important;
+    left: auto !important;
+
+    width: 60px;
+    height: 60px;
+
+    border-radius: 50%;
+
+    background: #0f6cbf;
+    color: #fff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+
+    z-index: 2147483647 !important;
+
+    transition: transform 0.2s ease;
+  }
+
+  #mchat-bubble:hover {
+    transform: scale(1.08);
+  }
+
+  /* ==========================================================
+     CHAT WINDOW
+     ========================================================== */
+
+  #mchat-window {
+    position: fixed !important;
+
+    bottom: 150px !important;
+    right: 24px !important;
+    left: auto !important;
+
+    width: 340px;
+    max-height: 480px;
+
+    background: #fff;
+
+    border-radius: 12px;
+
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+
+    display: none;
+
+    flex-direction: column;
+
+    overflow: hidden;
+
+    z-index: 2147483647 !important;
+
+    font-family: Arial, sans-serif;
+  }
+
+  #mchat-window.open {
+    display: flex;
+  }
+  /* ==========================================================
+     HEADER
+     ========================================================== */
+
+  #mchat-header {
+    background: #0f6cbf;
+    color: #fff;
+
+    padding: 12px 16px;
+
+    font-weight: bold;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  #mchat-close {
+    cursor: pointer;
+    font-size: 18px;
+  }
+  /* ==========================================================
+     MESSAGES
+     ========================================================== */
+
+  #mchat-messages {
+    flex: 1;
+
+    overflow-y: auto;
+
+    padding: 12px;
+
+    background: #f4f6f8;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+
+    max-height: 340px;
+  }
+
+  .mchat-msg {
+    max-width: 85%;
+
+    padding: 8px 12px;
+
+    border-radius: 14px;
+
+    font-size: 14px;
+
+    line-height: 1.4;
+
+    white-space: pre-wrap;
+
+    word-break: break-word;
+  }
+
+  .mchat-bot {
+    background: #e4e9ee;
+    color: #222;
+
+    align-self: flex-start;
+
+    border-bottom-left-radius: 2px;
+  }
+
+  .mchat-user {
+    background: #0f6cbf;
+    color: #fff;
+
+    align-self: flex-end;
+
+    border-bottom-right-radius: 2px;
+  }
+  /* ==========================================================
+     SOURCES
+     ========================================================== */
+
+  .mchat-sources {
+    font-size: 11px;
+
+    color: #667;
+
+    margin-top: 4px;
+  }
+  /* ==========================================================
+     TYPING INDICATOR
+     ========================================================== */
+
+  .mchat-typing {
+    font-size: 13px;
+
+    color: #888;
+
+    align-self: flex-start;
+
+    padding: 4px 12px;
+  }
+  /* ==========================================================
+     INPUT
+     ========================================================== */
+
+  #mchat-input-row {
+    display: flex;
+
+    border-top: 1px solid #ddd;
+
+    background: #fff;
+  }
+
+  #mchat-input {
+    flex: 1;
+
+    border: none;
+
+    padding: 10px 12px;
+
+    font-size: 14px;
+
+    outline: none;
+
+    min-width: 0;
+  }
+
+  #mchat-send {
+    background: #0f6cbf;
+
+    color: #fff;
+
+    border: none;
+
+    padding: 0 16px;
+
+    cursor: pointer;
+  }
+
+  #mchat-send:hover {
+    background: #0c5aa0;
+  }
+
+  #mchat-send:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+  }
+  /* ==========================================================
+     MOBILE
+     ========================================================== */
+
+  @media (max-width: 480px) {
+
+    #mchat-window {
+      width: calc(100vw - 30px);
+
+      right: 15px !important;
+
+      bottom: 145px !important;
+
+      max-height: 70vh;
+    }
+
+    #mchat-messages {
+      max-height: 50vh;
+    }
+
+    #mchat-bubble {
+      right: 15px !important;
+    }
+  }
+</style>
+<!-- ============================================================
+     CHAT BUTTON
+     ============================================================ -->
+
+<div id="mchat-bubble" title="Chat with us">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="28"
+    height="28"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="#ffffff"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <path
+      d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z">
+    </path>
+  </svg>
+</div>
+
+<!-- ============================================================
+     CHAT WINDOW
+     ============================================================ -->
+
+<div id="mchat-window">
+
+  <div id="mchat-header">
+
+    <span>Course Help Bot</span>
+
+    <span id="mchat-close">✕</span>
+
+  </div>
+
+  <div id="mchat-messages"></div>
+
+  <div id="mchat-input-row">
+    <input
+      type="text"
+      id="mchat-input"
+      placeholder="Ask a question..."
+      autocomplete="off"
+    />
+    <button
+      id="mchat-send"
+      type="button"
+    >
+      Send
+    </button>
+
+  </div>
+
+</div>
+<script>
+(function () {
+
+  "use strict";
+  /* ==========================================================
+     CONFIGURATION
+     ========================================================== */
+  /*
+   * RAG backend.
+   *
+   * For local XAMPP testing this is fine if:
+   *
+   * http://localhost/backend/rag.php
+   *
+   * is accessible from the Moodle browser.
+   *
+   * IMPORTANT:
+   * For production this should NOT remain localhost.
+   */
+  var RAG_ENDPOINT =
+    "http://localhost/backend/rag.php";
+
+
+  /*
+   * Moodle root.
+   *
+   * Moodle exposes its wwwroot through M.cfg.wwwroot.
+   *
+   * Example:
+   *
+   * http://localhost/moodle
+   */
+
+  var MOODLE_ROOT =
+    (
+      typeof M !== "undefined" &&
+      M.cfg &&
+      M.cfg.wwwroot
+    )
+      ? M.cfg.wwwroot
+      : window.location.origin;
+
+  /*
+   * Moodle context endpoint.
+   */
+
+  var CONTEXT_ENDPOINT =
+    MOODLE_ROOT +
+    "/local/aichat/context.php";
+
+  /* ==========================================================
+     STATE
+     ========================================================== */
+
+  var learnerContext = null;
+
+  var contextLoading = false;
+
+  var messageSending = false;
+
+  var fallbackDefault =
+    "Sorry, I'm temporarily unable to reach the AI assistant. " +
+    "Please try again shortly or contact your administrator.";
+
+  /* ==========================================================
+     DETECT CURRENT MOODLE PAGE
+     ========================================================== */
+
+  function detectCurrentPage() {
+
+    var classes =
+      document.body.className || "";
+    /*
+     * Moodle course class:
+     *
+     * course-5
+     */
+    var courseMatch =
+      classes.match(
+        /(?:^|\s)course-(\d+)(?:\s|$)/
+      );
+    /*
+     * Moodle activity class:
+     *
+     * cmid-13
+     */
+    var cmidMatch =
+      classes.match(
+        /(?:^|\s)cmid-(\d+)(?:\s|$)/
+      );
+    var page = {
+
+      courseId:
+        courseMatch
+          ? courseMatch[1]
+          : null,
+
+      cmId:
+        cmidMatch
+          ? cmidMatch[1]
+          : null
+
+    };
+    console.log(
+      "[Moodle AI] Current page:",
+      page
+    );
+    return page;
+  }
+  /* ==========================================================
+     FETCH MOODLE LEARNER CONTEXT
+     ========================================================== */
+
+  function fetchLearnerContext() {
+    /*
+     * Prevent multiple simultaneous requests.
+     */
+    if (contextLoading) {
+
+      return Promise.resolve(
+        learnerContext
+      );
+    }
+    contextLoading = true;
+    var page =
+      detectCurrentPage();
+
+
+    var url =
+      CONTEXT_ENDPOINT;
+
+
+    var params = [];
+    /*
+     * Add course ID.
+     */
+
+    if (page.courseId) {
+
+      params.push(
+        "courseid=" +
+        encodeURIComponent(
+          page.courseId
+        )
+      );
+    }
+
+    /*
+     * Add activity ID.
+     */
+
+    if (page.cmId) {
+
+      params.push(
+        "cmid=" +
+        encodeURIComponent(
+          page.cmId
+        )
+      );
+    }
+
+    /*
+     * Build final URL.
+     */
+
+    if (params.length > 0) {
+
+      url +=
+        "?" +
+        params.join("&");
+    }
+
+
+    console.log(
+      "[Moodle AI] Fetching context:",
+      url
+    );
+
+
+    return fetch(
+      url,
+      {
+        method: "GET",
+
+        credentials: "same-origin",
+
+        cache: "no-store",
+
+        headers: {
+          "Accept":
+            "application/json"
+        }
+      }
+    )
+
+    .then(function (res) {
+
+      if (!res.ok) {
+
+        throw new Error(
+          "Context request failed: HTTP " +
+          res.status
+        );
+      }
+
+
+      return res.json();
+    })
+
+
+    .then(function (data) {
+
+      /*
+       * The new context endpoint returns:
+       *
+       * {
+       *   context: {...},
+       *   signature: "..."
+       * }
+       */
+
+      if (
+        !data ||
+        !data.context ||
+        !data.signature
+      ) {
+
+        throw new Error(
+          "Invalid Moodle context response."
+        );
+      }
+
+
+      learnerContext =
+        data;
+
+
+      console.log(
+        "[Moodle AI] Context loaded:",
+        learnerContext
+      );
+
+
+      return learnerContext;
+    })
+
+
+    .catch(function (error) {
+
+      console.error(
+        "[Moodle AI] Context error:",
+        error
+      );
+
+
+      learnerContext =
+        null;
+
+
+      return null;
+    })
+
+
+    .finally(function () {
+
+      contextLoading =
+        false;
+    });
+  }
+  /* ==========================================================
+     INITIALIZE CHAT
+     ========================================================== */
+
+  function initChat() {
+
+    var bubble =
+      document.getElementById(
+        "mchat-bubble"
+      );
+
+
+    var win =
+      document.getElementById(
+        "mchat-window"
+      );
+
+
+    var closeBtn =
+      document.getElementById(
+        "mchat-close"
+      );
+
+
+    var messages =
+      document.getElementById(
+        "mchat-messages"
+      );
+
+
+    var input =
+      document.getElementById(
+        "mchat-input"
+      );
+
+
+    var sendBtn =
+      document.getElementById(
+        "mchat-send"
+      );
+
+    /*
+     * Make sure required elements exist.
+     */
+
+    if (
+      !bubble ||
+      !win ||
+      !closeBtn ||
+      !messages ||
+      !input ||
+      !sendBtn
+    ) {
+
+      console.error(
+        "[Moodle AI] Chat widget initialization failed."
+      );
+
+      return;
+    }
+
+    /*
+     * Move the widget to document.body.
+     *
+     * This prevents Moodle theme containers from
+     * interfering with position/z-index.
+     */
+
+    document.body.appendChild(
+      bubble
+    );
+
+    document.body.appendChild(
+      win
+    );
+
+
+    /* ========================================================
+       ADD MESSAGE
+       ======================================================== */
+
+    function addMessage(
+      text,
+      sender,
+      sources,
+      category
+    ) {
+
+      var div =
+        document.createElement(
+          "div"
+        );
+
+
+      div.className =
+        "mchat-msg " +
+        (
+          sender === "user"
+            ? "mchat-user"
+            : "mchat-bot"
+        );
+
+
+      /*
+       * textContent prevents HTML injection
+       * from AI/user messages.
+       */
+
+      div.textContent =
+        text || "";
+
+
+      /*
+       * Sources from RAG.
+       */
+
+      if (
+        sources &&
+        sources.length
+      ) {
+
+        var src =
+          document.createElement(
+            "div"
+          );
+
+
+        src.className =
+          "mchat-sources";
+
+
+        src.textContent =
+          "Source: " +
+          sources.join(", ");
+
+
+        div.appendChild(
+          src
+        );
+      }
+
+      /*
+       * Platform answers without official
+       * documentation.
+       */
+
+      else if (
+        sender === "bot" &&
+        category === "platform"
+      ) {
+
+        var note =
+          document.createElement(
+            "div"
+          );
+
+
+        note.className =
+          "mchat-sources";
+
+
+        note.textContent =
+          "General guidance, not from official documentation";
+
+
+        div.appendChild(
+          note
+        );
+      }
+      /*
+       * Progress responses.
+       */
+
+      else if (
+        sender === "bot" &&
+        category === "progress"
+      ) {
+
+        var progressNote =
+          document.createElement(
+            "div"
+          );
+
+
+        progressNote.className =
+          "mchat-sources";
+
+
+        progressNote.textContent =
+          "Based on your Moodle progress";
+
+
+        div.appendChild(
+          progressNote
+        );
+      }
+
+
+      messages.appendChild(
+        div
+      );
+
+
+      messages.scrollTop =
+        messages.scrollHeight;
+    }
+
+
+    /* ========================================================
+       SHOW TYPING
+       ======================================================== */
+
+    function showTyping() {
+
+      hideTyping();
+
+
+      var div =
+        document.createElement(
+          "div"
+        );
+
+
+      div.className =
+        "mchat-typing";
+
+
+      div.id =
+        "mchat-typing-indicator";
+
+
+      div.textContent =
+        "Thinking...";
+
+
+      messages.appendChild(
+        div
+      );
+
+
+      messages.scrollTop =
+        messages.scrollHeight;
+    }
+
+
+    /* ========================================================
+       HIDE TYPING
+       ======================================================== */
+
+    function hideTyping() {
+
+      var el =
+        document.getElementById(
+          "mchat-typing-indicator"
+        );
+
+
+      if (el) {
+
+        el.remove();
+      }
+    }
+    /* ========================================================
+       SEND MESSAGE
+       ======================================================== */
+
+    function handleSend() {
+
+      /*
+       * Prevent sending while another request
+       * is still running.
+       */
+
+      if (messageSending) {
+
+        return;
+      }
+
+
+      var text =
+        input.value.trim();
+
+
+      if (!text) {
+
+        return;
+      }
+
+      /*
+       * Context must exist before sending.
+       */
+
+      if (!learnerContext) {
+
+        addMessage(
+          "I'm still connecting to Moodle. Please wait a moment and try again.",
+          "bot"
+        );
+
+
+        fetchLearnerContext();
+
+        return;
+      }
+
+
+      /*
+       * Show user message.
+       */
+
+      addMessage(
+        text,
+        "user"
+      );
+
+
+      input.value = "";
+
+
+      showTyping();
+
+
+      messageSending =
+        true;
+
+
+      sendBtn.disabled =
+        true;
+
+
+      input.disabled =
+        true;
+
+
+      console.log(
+        "[Moodle AI] Sending question with context:",
+        learnerContext
+      );
+
+
+      fetch(
+        RAG_ENDPOINT,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json",
+
+            "Accept":
+              "application/json"
+          },
+
+          body: JSON.stringify({
+
+            message:
+              text,
+
+            context:
+              learnerContext
+
+          })
+        }
+      )
+
+
+      .then(function (res) {
+
+        if (!res.ok) {
+
+          throw new Error(
+            "RAG request failed: HTTP " +
+            res.status
+          );
+        }
+
+
+        return res.json();
+      })
+
+
+      .then(function (data) {
+
+        hideTyping();
+
+
+        console.log(
+          "[Moodle AI] RAG response:",
+          data
+        );
+
+
+        /*
+         * Backend security/context error.
+         */
+
+        if (
+          data.category ===
+          "security"
+        ) {
+
+          addMessage(
+            data.answer ||
+            "Your Moodle session could not be verified. Please refresh the page.",
+            "bot"
+          );
+
+
+          return;
+        }
+
+
+        /*
+         * Normal AI answer.
+         */
+
+        addMessage(
+          data.answer ||
+          fallbackDefault,
+
+          "bot",
+
+          data.sources,
+
+          data.category
+        );
+      })
+
+
+      .catch(function (error) {
+
+        hideTyping();
+
+
+        console.error(
+          "[Moodle AI] Chat error:",
+          error
+        );
+
+
+        addMessage(
+          fallbackDefault,
+          "bot"
+        );
+      })
+
+
+      .finally(function () {
+
+        messageSending =
+          false;
+
+
+        sendBtn.disabled =
+          false;
+
+
+        input.disabled =
+          false;
+
+
+        input.focus();
+      });
+    }
+    /* ========================================================
+       OPEN / CLOSE CHAT
+       ======================================================== */
+
+    bubble.addEventListener(
+      "click",
+      function () {
+
+        var opening =
+          !win.classList.contains(
+            "open"
+          );
+
+
+        win.classList.toggle(
+          "open"
+        );
+
+        /*
+         * Closing the window.
+         */
+
+        if (!opening) {
+
+          return;
+        }
+
+        /*
+         * First opening message.
+         */
+
+        if (
+          messages.children.length === 0
+        ) {
+
+          addMessage(
+            "Hi! Ask me anything about your course content or progress.",
+            "bot"
+          );
+        }
+        /*
+         * IMPORTANT:
+         *
+         * Refresh Moodle context every time
+         * the chatbot is opened.
+         *
+         * This keeps:
+         *
+         * - role
+         * - course
+         * - activity
+         * - completion
+         * - progress
+         *
+         * current.
+         */
+
+        fetchLearnerContext();
+        /*
+         * Put cursor into input.
+         */
+
+        setTimeout(
+          function () {
+
+            input.focus();
+
+          },
+          100
+        );
+      }
+    );
+
+
+    closeBtn.addEventListener(
+      "click",
+      function () {
+
+        win.classList.remove(
+          "open"
+        );
+      }
+    );
+    sendBtn.addEventListener(
+      "click",
+      handleSend
+    );
+
+    input.addEventListener(
+      "keypress",
+      function (e) {
+
+        if (
+          e.key === "Enter"
+        ) {
+
+          e.preventDefault();
+
+          handleSend();
+        }
+      }
+    );
+
+    /*
+     * Fetch context immediately after Moodle page loads.
+     *
+     * The chatbot does not need to be open.
+     */
+
+    fetchLearnerContext();
+  }
+
+
+  /* ==========================================================
+     START WIDGET
+     ========================================================== */
+
+  if (
+    document.readyState ===
+    "loading"
+  ) {
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      initChat
+    );
+
+  } else {
+
+    initChat();
+  }
+
+})();
+</script>

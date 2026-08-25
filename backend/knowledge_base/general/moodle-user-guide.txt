@@ -1,0 +1,19 @@
+How to Log In to the CPD Platform
+
+To log in, go to the platform's homepage and click "Log in" in the top right corner. Enter the username and password provided by your facility administrator. If you have forgotten your password, click "Forgot password?" and follow the instructions sent to your registered email. If you do not have an account yet, contact your facility's eLearning administrator to be enrolled.
+
+How to Access an Assigned Course
+
+Once logged in, your assigned CPD courses appear on your Dashboard. Click on a course name to open it. Inside the course, learning materials are organized into sections or topics. Click each item (a reading, video, or activity) to open and complete it in order, unless your course allows free navigation.
+
+How to Complete a Quiz or Assessment
+
+Open the quiz from the course page and click "Attempt quiz now." Answer each question and click "Next" to move through the quiz. Some quizzes allow you to review answers before submitting; others do not. When finished, click "Submit all and finish." Your score and any feedback will be shown according to how the course was set up by the course creator.
+
+How to Download a Certificate
+
+After completing all required activities and assessments in a course, a certificate becomes available if the course was configured to issue one. Go to the course page and look for a "Certificate" activity, usually near the end of the course. Click it to view and download your certificate as a PDF.
+
+Common Technical Issues
+
+If a video will not play, check your internet connection first, as low-connectivity settings may require lower video quality. If a quiz will not submit, do not refresh the page; wait a moment and try again, as this is often a temporary connection issue. If you cannot see an assigned course on your Dashboard, contact your facility administrator to confirm your enrollment.
